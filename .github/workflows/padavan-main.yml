@@ -17,9 +17,9 @@ jobs:
       uses: actions/checkout@v3
 
     - name: Install dependencies
-  run: |
-    sudo apt-get update
-    sudo apt-get install -y git curl unzip build-essential g++ lib32z1-dev libncurses5-dev python3
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y git curl unzip build-essential g++ lib32z1-dev libncurses5-dev python3
     
     - name: Clone Padavan source code
       run: |
