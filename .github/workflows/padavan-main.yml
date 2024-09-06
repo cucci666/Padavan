@@ -1,4 +1,4 @@
-name: Build Padavan Firmware
+name: Build Padavan Firmware with SSR Plugin
 
 on:
   push:
@@ -19,16 +19,21 @@ jobs:
     - name: Set up build environment
       run: |
         sudo apt-get update
-        sudo apt-get install -y gcc-mipsel-linux-gnu make curl zip git
+        sudo apt-get install -y gcc-mipsel-linux-gnu make curl zip git help2man
         sudo apt-get install -y build-essential
         git clone https://github.com/cucci666/Padavan.git
         cd Padavan/toolchain-mipsel
         ./build_toolchain
 
-    - name: Build firmware
+    - name: Clone SSR Plugin
+      run: |
+        cd Padavan/trunk/user
+        git clone https://github.com/shadowsocksr-backup/shadowsocksr.git
+
+    - name: Build firmware with SSR Plugin
       run: |
         cd Padavan/trunk
-        ./build_firmware
+        ./build_firmware_modify RM2100  # 根据设备替换为正确的固件配置
 
     - name: Upload firmware
       uses: actions/upload-artifact@v3
