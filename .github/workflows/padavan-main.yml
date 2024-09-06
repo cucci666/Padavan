@@ -25,6 +25,12 @@ jobs:
       run: |
         git clone https://github.com/cucci666/Padavan.git Padavan
 
+    - name: Remove existing SSR user folder (if exists)
+      run: |
+        if [ -d "Padavan/trunk/user" ]; then
+          rm -rf Padavan/trunk/user
+        fi
+
     - name: Clone SSR plugin
       run: |
         git clone https://github.com/shadowsocksr-backup/shadowsocksr.git Padavan/trunk/user
