@@ -30,9 +30,13 @@ jobs:
       run: |
         mkdir -p Padavan/trunk/user
 
-    - name: Clone SSR plugin into user directory
+    - name: Clone or update SSR plugin
       run: |
-        git clone https://github.com/shadowsocksr-backup/shadowsocksr.git Padavan/trunk/user
+        if [ -d "Padavan/trunk/user/.git" ]; then
+          cd Padavan/trunk/user && git pull
+        else
+          git clone https://github.com/shadowsocksr-backup/shadowsocksr.git Padavan/trunk/user
+        fi
 
     - name: Build toolchain
       run: |
