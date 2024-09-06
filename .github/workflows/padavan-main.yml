@@ -1,4 +1,4 @@
-name: Build Padavan with ShadowsocksR
+name: Build Padavan Firmware
 
 on:
   push:
@@ -13,36 +13,24 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: 检出代码
+    - name: Checkout code
       uses: actions/checkout@v3
 
-    - name: 安装依赖
+    - name: Set up build environment
       run: |
         sudo apt-get update
-        sudo apt-get install -y git curl unzip build-essential g++ lib32z1-dev libncurses5-dev python3
-    
-    - name: 克隆Padavan源代码
-      run: |
+        sudo apt-get install -y gcc-mipsel-linux-gnu make curl zip git
+        sudo apt-get install -y build-essential
         git clone https://github.com/cucci666/Padavan.git
-        ls -al Padavan  # 添加这行来检查Padavan目录是否正确克隆
-        cd Padavan/toolkit || exit 1  # 如果找不到目录则退出
+        cd Padavan/toolchain-mipsel
+        ./build_toolchain
 
-    - name: 清理和构建工具链
-      run: |
-        ./clean_sources.sh
-        ./build_toolchain.sh
-
-    - name: 克隆ShadowsocksR
-      run: |
-        cd Padavan/trunk/user
-        git clone https://github.com/shadowsocksr-backup/shadowsocksr.git
-
-    - name: 编译固件
+    - name: Build firmware
       run: |
         cd Padavan/trunk
-        ./build_firmware_modify RM2100
+        ./build_firmware
 
-    - name: 上传固件
+    - name: Upload firmware
       uses: actions/upload-artifact@v3
       with:
         name: firmware
