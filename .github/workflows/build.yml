@@ -1,4 +1,4 @@
-name: Build Padavan with ShadowsocksR
+name: Padavan Build
 
 on:
   push:
@@ -20,8 +20,6 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install -y gcc-aarch64-linux-gnu bison flex libssl-dev bc make curl zip help2man libtool
-        sudo apt-get install -y build-essential automake
-        git clone https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86 -b master --depth=1 prebuilts_clang
 
     - name: Clone Padavan source code
       run: |
@@ -29,20 +27,18 @@ jobs:
 
     - name: Clone SSR plugin
       run: |
-        git clone https://github.com/shadowsocksr-backup/shadowsocksr.git Padavan/trunk/user/shadowsocksr
+        git clone https://github.com/shadowsocksr-backup/shadowsocksr.git Padavan/trunk/user
 
-    - name: Download toolchain
+    - name: Download and set up toolchain
       run: |
         cd Padavan/toolchain-mipsel
         chmod +x dl_toolchain.sh
         ./dl_toolchain.sh
 
-    - name: Compile firmware
+    - name: Build firmware
       run: |
         cd Padavan/trunk
-        export PATH=$(pwd)/../prebuilts_clang/clang-r450784d/bin:${PATH}
-        make apollo_defconfig
-        make -j$(nproc)
+        ./build_firmware_modify RM2100
 
     - name: Upload firmware
       uses: actions/upload-artifact@v3
