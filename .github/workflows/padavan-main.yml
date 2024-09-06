@@ -1,0 +1,45 @@
+name: Build Padavan with ShadowsocksR
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Install dependencies
+  run: |
+    sudo apt-get update
+    sudo apt-get install -y git curl unzip build-essential g++ lib32z1-dev libncurses5-dev python3
+
+    - name: Clone Padavan source code
+      run: |
+        git clone https://github.com/cucci666/Padavan.git
+        cd Padavan/toolkit
+        ./clean_sources.sh
+        ./build_toolchain.sh
+
+    - name: Clone ShadowsocksR
+      run: |
+        cd Padavan/trunk/user
+        git clone https://github.com/shadowsocksr-backup/shadowsocksr.git
+
+    - name: Build firmware
+      run: |
+        cd Padavan/trunk
+        ./build_firmware_modify RM2100
+
+    - name: Upload firmware
+      uses: actions/upload-artifact@v3
+      with:
+        name: firmware
+        path: Padavan/trunk/output/images/*.trx
