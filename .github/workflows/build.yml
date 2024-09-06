@@ -14,7 +14,7 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Install dependencies
       run: |
@@ -23,7 +23,7 @@ jobs:
 
     - name: Clone Padavan source code
       run: |
-        git clone https://github.com/<你的GitHub用户名>/Padavan.git
+        git clone https://github.com/cucci666/Padavan.git
         cd Padavan/toolkit
         ./clean_sources.sh
         ./build_toolchain.sh
