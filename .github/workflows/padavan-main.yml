@@ -19,32 +19,31 @@ jobs:
     - name: Set up build environment
       run: |
         sudo apt-get update
-        sudo apt-get install -y gcc-aarch64-linux-gnu bison flex libssl-dev bc make curl zip help2man libtool fakeroot autogen autoconf automake autopoint xz-utils
+        sudo apt-get install -y gcc-aarch64-linux-gnu bison flex libssl-dev bc make curl zip help2man libtool
+        git clone https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86 -b master --depth=1 prebuilts_clang
 
     - name: Clone Padavan source code
       run: |
         git clone https://github.com/cucci666/Padavan.git Padavan
 
-    - name: Remove existing SSR user folder (if exists)
+    - name: Ensure SSR directory exists
       run: |
-        if [ -d "Padavan/trunk/user" ]; then
-          rm -rf Padavan/trunk/user
-        fi
+        mkdir -p Padavan/trunk/user
 
-    - name: Clone SSR plugin
+    - name: Clone SSR plugin into user directory
       run: |
         git clone https://github.com/shadowsocksr-backup/shadowsocksr.git Padavan/trunk/user
 
     - name: Build toolchain
       run: |
-        cd Padavan/toolchain-mipsel
+        cd Padavan/trunk/tools
         chmod +x dl_toolchain.sh
         ./dl_toolchain.sh
 
-    - name: Build firmware
+    - name: Compile firmware
       run: |
         cd Padavan/trunk
-        fakeroot ./build_firmware_modify RM2100
+        ./build_firmware_modify RM2100
 
     - name: Upload firmware
       uses: actions/upload-artifact@v3
