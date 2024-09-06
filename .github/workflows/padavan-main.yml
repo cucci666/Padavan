@@ -20,7 +20,7 @@ jobs:
   run: |
     sudo apt-get update
     sudo apt-get install -y git curl unzip build-essential g++ lib32z1-dev libncurses5-dev python3
-
+    
     - name: Clone Padavan source code
       run: |
         git clone https://github.com/cucci666/Padavan.git
