@@ -1,4 +1,4 @@
-name: Padavan Build
+name: Build Padavan with ShadowsocksR
 
 on:
   push:
@@ -19,25 +19,26 @@ jobs:
     - name: Set up build environment
       run: |
         sudo apt-get update
-        sudo apt-get install -y gcc-mipsel-linux-gnu make curl zip git help2man libtool build-essential automake
-        
+        sudo apt-get install -y gcc-aarch64-linux-gnu bison flex libssl-dev bc make curl zip help2man libtool gcc-mipsel-linux-gnu binutils-mipsel-linux-gnu
+
     - name: Clone Padavan source code
       run: |
-        git clone https://github.com/你的GitHub用户名/Padavan.git
+        git clone https://github.com/cucci666/Padavan.git
         cd Padavan/trunk
         ./build_toolchain.sh
         ./clean_sources.sh
 
-    - name: 克隆 SSR 插件
+    - name: Clone SSR
       run: |
-        git clone https://github.com/shadowsocksr-backup/shadowsocksr.git Padavan/trunk/user
-        
+        cd Padavan/trunk/user
+        git clone https://github.com/shadowsocksr-backup/shadowsocksr.git
+
     - name: Build firmware
       run: |
         cd Padavan/trunk
         ./build_firmware_modify RM2100
 
-    - name: Upload build artifacts
+    - name: Upload firmware
       uses: actions/upload-artifact@v3
       with:
         name: firmware
